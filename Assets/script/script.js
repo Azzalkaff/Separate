@@ -4,6 +4,8 @@ function initApp() {
 
             setupClassSelector();
 
+            setupGlobalFeatures(); // Initialize Global Modal
+
             // --- NEW: Register Service Worker & Offline Check ---
             registerServiceWorker();
             setupOfflineDetection();
@@ -57,73 +59,56 @@ function initApp() {
 
         function setupClassSelector() {
     const selector = document.getElementById('classSelector');
+    const displaySpan = document.getElementById('classNameDisplay'); // Elemen baru
+    
     if(!selector) return;
 
-    // Set nilai awal dari localStorage
+    // 1. Set nilai awal
     selector.value = currentClass;
+    if(displaySpan) displaySpan.textContent = currentClass.replace('-', ' - '); // Format teks biar cantik
 
-    // Event saat ganti kelas
-    
-    // Event saat ganti kelas
+    // 2. Event saat ganti kelas
     selector.addEventListener('change', (e) => {
         const val = e.target.value;
         currentClass = val;
         localStorage.setItem('selectedClass', currentClass);
         
-        // Render ulang
+        // Update Teks Tampilan secara manual
+        if(displaySpan) displaySpan.textContent = val.replace('-', ' - ');
+
+        // Render ulang jadwal
         const activeDay = document.querySelector('.day-pill.active')?.textContent.toLowerCase() || getAutoDetectedDay();
         renderSchedule(activeDay);
         
-        // Feedback visual
-        const daySubtitle = document.getElementById('daySubtitle');
-        daySubtitle.style.opacity = '0';
-        setTimeout(() => daySubtitle.style.opacity = '1', 200);
+        // Feedback visual (Animasi kedip)
+        const dayTitle = document.getElementById('dayTitle');
+        dayTitle.style.opacity = '0.5';
+        setTimeout(() => dayTitle.style.opacity = '1', 300);
     });
 
-    // FITUR BARU: Double Click pada teks "Pilih Kelas" untuk Reset Cache (Force Refresh)
-    // Berguna jika ada teman yang bilang "kok jadwal gw belum update?"
-    const headerLabel = document.querySelector('label[for="classSelector"]');
-    if(headerLabel) {
-        headerLabel.addEventListener('dblclick', () => {
-            if(confirm('Refresh aplikasi untuk mengambil jadwal terbaru? (Cache Reset)')) {
-                // Hapus cache service worker agar data baru masuk
+    // 3. Fitur Double Click Reset (Tetap dipertahankan)
+    // Kita pindahkan event ke parent container karena label mungkin sudah tidak ada/berubah
+    const pillContainer = document.querySelector('.class-selector-pill');
+    if(pillContainer) {
+        pillContainer.addEventListener('dblclick', (e) => {
+            // Cek jika yang diklik bukan dropdown (misal bagian icon)
+            if(e.target !== selector && confirm('Refresh aplikasi (Cache Reset)?')) {
                 if('serviceWorker' in navigator) {
                     navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                        for(let registration of registrations) {
-                            registration.unregister();
-                        }
+                        for(let registration of registrations) { registration.unregister(); }
                     });
                 }
-                // Reload halaman paksa
                 window.location.reload(true);
             }
         });
     }
 
-    // ... kode event listener change sebelumnya ...
-
-    // FITUR ONBOARDING: Cek apakah user baru pertama kali buka?
+    // 4. Onboarding Hint
     if (!localStorage.getItem('hasSeenClassHint')) {
-        // Tampilkan notifikasi kecil di pojok kanan atas (menggunakan SweetAlert toast)
         const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
+            toast: true, position: 'top-start', showConfirmButton: false, timer: 4000
         });
-
-        Toast.fire({
-            icon: 'info',
-            title: 'Ganti kelas?',
-            text: 'Ketuk nama kelas di pojok kiri atas.'
-        });
-
-        // Tandai bahwa user sudah diberi tahu
+        Toast.fire({ icon: 'info', title: 'Ganti Kelas?', text: 'Tap di sini untuk pilih kelas' });
         localStorage.setItem('hasSeenClassHint', 'true');
     }
 }
@@ -631,3 +616,266 @@ function updateOnlineStatus() {
                 }
             }
         }
+
+        // --- GLOBAL INSIGHT FEATURES (NEW) ---
+
+        // --- GLOBAL INSIGHT FEATURES (FIXED & CONSOLIDATED) ---
+
+function setupGlobalFeatures() {
+    // 1. Setup Trigger Button
+    const btn = document.getElementById('globalViewBtn');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const modalEl = document.getElementById('globalModal');
+            const modal = new bootstrap.Modal(modalEl);
+            
+            // Set default inputs to current time
+            const now = new Date();
+            const daysMap = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+            const curDay = daysMap[now.getDay()];
+            
+            // Set dropdown day
+            const daySelect = document.getElementById('monitorDay');
+            if(daySelect && curDay !== 'minggu' && curDay !== 'sabtu') {
+                daySelect.value = curDay;
+            }
+            
+            // Set time input
+            const timeInput = document.getElementById('monitorTime');
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            timeInput.value = `${h}:${m}`;
+
+            // Auto check on open
+            checkGlobalTime();
+
+            modal.show();
+        });
+    }
+
+    // 2. Setup Monitor Button (Cek Waktu)
+    document.getElementById('btnCheckTime')?.addEventListener('click', checkGlobalTime);
+
+    // 3. Setup Search Input
+    const searchInput = document.getElementById('globalSearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            handleGlobalSearch(e.target.value);
+        });
+    }
+
+    // 4. Generate Data Tags (Dosen & Ruangan)
+    generateSearchTags();
+}
+
+function checkGlobalTime() {
+    const day = document.getElementById('monitorDay').value;
+    const timeVal = document.getElementById('monitorTime').value;
+    const container = document.getElementById('monitorResults');
+    
+    if(!timeVal) return;
+
+    // Convert input HH:MM to minutes
+    const [h, m] = timeVal.split(':').map(Number);
+    const checkMinutes = h * 60 + m;
+
+    container.innerHTML = ''; 
+
+    Object.keys(scheduleData).forEach(className => {
+        const classSchedule = scheduleData[className][day];
+        let activeItem = null;
+
+        if (classSchedule) {
+            activeItem = classSchedule.find(item => {
+                const cleanTime = item.jam.replace(/\./g, ':');
+                const parts = cleanTime.split(/\s*[\–\-\to]\s*/).filter(t => t.length > 0);
+                const [startH, startM] = parts[0].split(':').map(Number);
+                const [endH, endM] = (parts[1] || parts[0]).split(':').map(Number);
+                const startMin = startH * 60 + startM;
+                const endMin = endH * 60 + endM;
+                return checkMinutes >= startMin && checkMinutes < endMin;
+            });
+        }
+
+        const card = document.createElement('div');
+        const shortName = className.split('-')[0];
+        
+        if (activeItem) {
+            // Apply Full Color Theme
+            const style = getSubjectStyle(activeItem.mata_kuliah);
+            let practiceClass = style.isPractice ? 'is-practice' : '';
+            
+            card.className = `insight-card ${style.themeClass} ${practiceClass}`;
+            
+            card.innerHTML = `
+                <div class="class-badge">
+                    <span>${shortName}</span>
+                    <small>KELAS</small>
+                </div>
+                <div class="insight-info w-100">
+                    <h6>${activeItem.mata_kuliah}</h6>
+                    <div class="insight-meta">
+                        <span><i class="fa-regular fa-clock"></i> ${activeItem.jam}</span>
+                        <span><i class="fa-solid fa-location-dot"></i> ${activeItem.ruang}</span>
+                    </div>
+                    <span class="insight-dosen"><i class="fa-solid fa-chalkboard-user me-1"></i> ${activeItem.dosen}</span>
+                </div>
+            `;
+        } else {
+            // State Kosong (Tetap Putih/Abu)
+            card.className = 'insight-card insight-empty';
+            card.innerHTML = `
+                <div class="class-badge">
+                    <span>${shortName}</span>
+                </div>
+                <div class="insight-info">
+                    <h6>Tidak ada jadwal</h6>
+                    <div class="insight-meta">Kelas kosong pada jam ini.</div>
+                </div>
+            `;
+        }
+        container.appendChild(card);
+    });
+}
+
+function handleGlobalSearch(query) {
+    const container = document.getElementById('searchResults');
+    const suggestionArea = document.getElementById('suggestionArea');
+    
+    container.innerHTML = '';
+    
+    // Logic: Toggle Suggestion Area
+    if (!query || query.length < 2) {
+        if(suggestionArea) suggestionArea.style.display = 'block';
+        return;
+    }
+
+    if(suggestionArea) suggestionArea.style.display = 'none';
+
+    const lowerQ = query.toLowerCase();
+    let found = false;
+
+    Object.keys(scheduleData).forEach(className => {
+        const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat'];
+        days.forEach(day => {
+            const items = scheduleData[className][day];
+            if(!items) return;
+
+            items.forEach(item => {
+                const matchText = `${item.mata_kuliah} ${item.dosen} ${item.ruang}`.toLowerCase();
+                
+                if (matchText.includes(lowerQ)) {
+                    found = true;
+                    
+                    const card = document.createElement('div');
+                    // Apply Full Color Theme
+                    const style = getSubjectStyle(item.mata_kuliah);
+                    let practiceClass = style.isPractice ? 'is-practice' : '';
+                    
+                    card.className = `insight-card ${style.themeClass} ${practiceClass} mb-2`;
+                    
+                    const dayName = day.charAt(0).toUpperCase() + day.slice(1);
+                    
+                    card.innerHTML = `
+                        <div class="class-badge">
+                            <span>${className.split('-')[0]}</span>
+                        </div>
+                        <div class="insight-info w-100">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6>${item.mata_kuliah}</h6>
+                                <span class="badge bg-white text-dark shadow-sm" style="opacity:0.9">${dayName}</span>
+                            </div>
+                            <div class="insight-meta mt-2">
+                                <span><i class="fa-regular fa-clock"></i> ${item.jam}</span>
+                                <span><i class="fa-solid fa-location-dot"></i> ${item.ruang}</span>
+                            </div>
+                            <span class="insight-dosen"><i class="fa-solid fa-chalkboard-user me-1"></i> ${item.dosen}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        });
+    });
+
+    if (!found) {
+        container.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fa-solid fa-magnifying-glass fa-2x text-muted mb-3"></i>
+                <p class="text-muted fw-bold">Tidak ditemukan.</p>
+                <button class="btn btn-sm btn-outline-secondary rounded-pill px-4" onclick="clearSearch()">Reset Pencarian</button>
+            </div>`;
+    }
+}
+
+function generateSearchTags() {
+    const dosenSet = new Set();
+    const ruangSet = new Set();
+
+    // 1. Collect Data Unik
+    Object.keys(scheduleData).forEach(cls => {
+        const days = ['senin', 'selasa', 'rabu', 'kamis', 'jumat'];
+        days.forEach(day => {
+            const items = scheduleData[cls][day];
+            if(items) {
+                items.forEach(item => {
+                    // Split nama dosen
+                    const dosens = item.dosen.split(',').map(d => d.trim());
+                    dosens.forEach(d => {
+                        if(d !== '-' && d.length > 3) dosenSet.add(d);
+                    });
+
+                    // Ruangan (ambil kode depan saja)
+                    const r = item.ruang.split('-')[0].trim();
+                    if(r !== '-' && r.length > 2) ruangSet.add(r);
+                });
+            }
+        });
+    });
+
+    // 2. Render Tags Dosen
+    const dosenContainer = document.getElementById('dosenTags');
+    if(dosenContainer) {
+        dosenContainer.innerHTML = '';
+        Array.from(dosenSet).sort().forEach(dosen => {
+            const tag = document.createElement('span');
+            tag.className = 'search-tag';
+            tag.textContent = dosen;
+            tag.onclick = () => {
+                const input = document.getElementById('globalSearchInput');
+                if(input) {
+                    input.value = dosen;
+                    handleGlobalSearch(dosen); // Panggil fungsi search yang benar
+                }
+            };
+            dosenContainer.appendChild(tag);
+        });
+    }
+
+    // 3. Render Tags Ruangan
+    const ruangContainer = document.getElementById('ruangTags');
+    if(ruangContainer) {
+        ruangContainer.innerHTML = '';
+        Array.from(ruangSet).sort().forEach(ruang => {
+            const tag = document.createElement('span');
+            tag.className = 'search-tag';
+            tag.textContent = ruang;
+            tag.onclick = () => {
+                const input = document.getElementById('globalSearchInput');
+                if(input) {
+                    input.value = ruang;
+                    handleGlobalSearch(ruang); // Panggil fungsi search yang benar
+                }
+            };
+            ruangContainer.appendChild(tag);
+        });
+    }
+}
+
+function clearSearch() {
+    const input = document.getElementById('globalSearchInput');
+    if(input) {
+        input.value = '';
+        handleGlobalSearch('');
+    }
+}
