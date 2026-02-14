@@ -60,39 +60,192 @@
         }
 
         /* --- Header Styling --- */
-        .app-header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-    
-    /* Update style date-badge agar terlihat seperti tombol */
-.date-badge {
-    background: #1e293b; /* Warna gelap elegan */
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        /* --- Header Styling (Revamped & High Usability) --- */
+.app-header {
+    background: rgba(255, 255, 255, 0.95); /* Lebih solid sedikit */
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.date-badge:hover {
-    background: #334155;
+.header-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+/* 1. Class Selector (BIGGER TOUCH AREA) */
+.class-selector-pill {
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px; /* Lebih bulat */
+    padding: 8px 12px; /* Padding diperbesar drastis (sebelumnya 4px) */
+    padding-right: 30px; /* Space untuk panah */
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    min-width: 140px; /* Lebar minimum agar tidak gepeng */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.class-selector-pill:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-/* Style saat input date aktif (fokus) */
-#realDateInput:focus + #datePickerBtn {
-    ring: 2px solid #cbd5e1;
+.class-selector-pill .icon-box {
+    width: 40px; /* Icon lebih besar */
+    height: 40px;
+    background: #f1f5f9; /* Warna icon lebih soft */
+    color: #1e293b;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-right: 12px;
 }
 
+.select-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.label-tiny {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Teks Nama Kelas (Dummy Display) */
+.class-name-display {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #334155;
+    line-height: 1.2;
+}
+
+/* Select Asli: Invisible tapi menutupi seluruh tombol */
+.class-dropdown-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0; /* Tidak terlihat */
+    cursor: pointer;
+    z-index: 10; /* Paling atas */
+    font-size: 16px; /* Mencegah zoom in di iOS */
+}
+
+.caret-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+/* 2. Search Bar (Middle) */
+.header-center {
+    flex: 1;
+    max-width: 380px;
+}
+
+.search-trigger-bar {
+    width: 100%;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 10px 16px; /* Tinggi disamakan dengan tombol kiri/kanan */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #64748b;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    height: 58px; /* Tinggi fix agar sejajar */
+}
+
+.search-trigger-bar:hover {
+    background: #fff;
+    border-color: #94a3b8;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 3. Time Widget (Visual Hierarchy) */
+.header-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.time-widget {
+    background: #1e293b; /* Dark Theme */
+    color: #fff;
+    padding: 6px 8px 6px 16px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 10px rgba(30, 41, 59, 0.2);
+    height: 58px; /* Tinggi fix sejajar */
+    transition: transform 0.2s;
+}
+
+.time-widget:active {
+    transform: scale(0.98);
+}
+
+/* Bagian Tanggal (Konteks - Lebih Kecil) */
+.date-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    padding-right: 12px;
+    line-height: 1.1;
+}
+
+#currentDateDisplay {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    white-space: nowrap;
+    text-align: right;
+    max-width: 80px; /* Batasi lebar agar rapi */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Bungkus jadi 2 baris jika panjang */
+    -webkit-box-orient: vertical;
+}
+
+/* Bagian Jam (Fokus Utama - Besar & Monospace) */
+.time-section {
+    background: rgba(0,0,0,0.3);
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace; /* Font monospace agar angka tidak loncat */
+}
+
+#realtimeClock {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #4ade80; /* Hijau neon soft agar terlihat 'hidup' */
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+}
         /* --- Day Navigation (Scrollable Pill) --- */
         .day-nav-container {
             overflow-x: auto;
@@ -465,155 +618,64 @@ body::before {
 }
 
 /* --- MOBILE OPTIMIZATION (Salin bagian ini ke paling bawah style) --- */
-        @media (max-width: 576px) {
-            /* 1. Header Lebih Ringkas */
-            .app-header {
-                padding: 12px 0;
-            }
-            .app-header h5 {
-                font-size: 1rem; /* Perkecil ukuran nama kelas */
-            }
-            .app-header small {
-                display: none; /* Sembunyikan subtitle "Jadwal Semester 2" agar tidak penuh */
-            }
-            
-            /* 2. Tombol Tanggal & Jam Compact */
-            .date-badge {
-                padding: 6px 12px;
-                font-size: 0.75rem; /* Font lebih kecil */
-            }
-            /* Sembunyikan jam detik di HP, cukup tanggal saja agar muat */
-            #realtimeClock {
-                display: none; 
-            }
-            /* Hilangkan garis pemisah jam jika jam disembunyikan */
-            .date-badge span.opacity-50 {
-                display: none;
-            }
-
-            /* 3. Container & Grid */
-            .container {
-                padding-left: 20px;
-                padding-right: 20px;
-            }
-            .schedule-grid {
-                gap: 15px; /* Kurangi jarak antar kartu */
-            }
-
-            /* 4. Kartu Jadwal (Zen Card) Lebih Padat */
-            .zen-card {
-                padding: 16px; /* Padding dalam kartu dikurangi dari 24px ke 16px */
-                min-height: auto; /* Hilangkan tinggi minimum agar tidak terlalu panjang */
-                border-radius: 20px;
-            }
-            .card-subject {
-                font-size: 1.1rem; /* Judul Matkul tidak terlalu besar */
-                margin-top: 10px;
-            }
-            .card-details {
-                font-size: 0.8rem;
-                padding-top: 10px;
-            }
-            .card-tag {
-                font-size: 0.65rem;
-                padding: 3px 8px;
-            }
-
-            /* 5. Navigasi Hari (Pill) */
-            .day-pill {
-                padding: 8px 18px;
-                font-size: 0.85rem;
-            }
-            
-            /* 6. Dynamic Island (Status Bar Bawah) */
-            .dynamic-island {
-                width: 92%; /* Lebih lebar dikit di HP */
-                bottom: 20px;
-                padding: 10px 15px;
-            }
-            .island-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 0.9rem;
-            }
-            .island-subject {
-                max-width: 150px; /* Batasi panjang teks agar tidak merusak layout */
-            }
-        }
-        
-        /* --- MOBILE OPTIMIZATION (VERSI FIX: JAM TAMPIL) --- */
-        @media (max-width: 576px) {
-            /* 1. Header Lebih Ringkas */
-            .app-header {
-                padding: 10px 0;
-            }
-            /* Perkecil teks kiri (Nama Kelas) agar tidak nabrak kanan */
-            .app-header h5 {
-                font-size: 0.9rem; 
-                white-space: nowrap;
-            }
-            .app-header small {
-                display: none; /* Sembunyikan subtitle "Jadwal Semester 2" */
-            }
-            
-            /* 2. Tombol Tanggal & Jam (Tumpuk Vertikal) */
-            .date-badge {
-                /* Ubah arah jadi kolom (atas-bawah) */
-                flex-direction: column !important; 
-                align-items: flex-end !important; /* Rata kanan */
-                padding: 5px 12px !important;
-                gap: 0 !important; /* Hilangkan jarak antar elemen */
-                background: #1e293b !important;
-                min-width: 100px; /* Lebar minimum agar stabil */
-            }
-
-            /* Tanggal (Atas) - Font Kecil */
-            #currentDateDisplay {
-                font-size: 0.65rem !important;
-                opacity: 0.8;
-                line-height: 1.2;
-            }
-
-            /* Jam (Bawah) - Font Lebih Besar & Tampil */
-            #realtimeClock {
-                display: block !important; /* PASTIKAN INI MUNCUL */
-                font-size: 0.85rem !important;
-                font-weight: 700;
-                line-height: 1.2;
-            }
-
-            /* Sembunyikan garis pemisah dan icon kalender agar hemat tempat */
-            .date-badge .opacity-50, 
-            .date-badge .fa-calendar-days {
-                display: none !important;
-            }
-
-            /* 3. Container & Grid */
-            .container {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-            .schedule-grid {
-                gap: 15px;
-            }
-
-            /* 4. Kartu Jadwal */
-            .zen-card {
-                padding: 15px;
-                border-radius: 16px;
-            }
-            .card-subject {
-                font-size: 1.1rem;
-            }
-            
-            /* 5. Dynamic Island (Bawah) */
-            .dynamic-island {
-                width: 92%;
-                bottom: 20px;
-                padding: 8px 15px;
-            }
-        }
+        /* --- Mobile Optimization Header Baru --- */
+/* --- Mobile Optimization (Updated for Better UX) --- */
+@media (max-width: 576px) {
+    .header-grid {
+        gap: 8px; /* Rapatkan jarak */
+    }
     
+    /* 1. Class Selector Compact */
+    .class-selector-pill {
+        padding: 8px;
+        min-width: auto;
+        padding-right: 8px; /* Hilangkan space arrow */
+    }
+    .class-selector-pill .icon-box {
+        margin-right: 0; /* Icon only mode jika sempit */
+        width: 36px; height: 36px;
+    }
+    .select-wrapper {
+        display: none; /* Sembunyikan teks nama kelas di HP agar hemat tempat */
+    }
+    .caret-icon { display: none; }
+    
+    /* Tetap pastikan select bisa diklik */
+    .class-dropdown-overlay {
+        width: 100%; height: 100%;
+    }
+
+    /* 2. Search Bar Compact */
+    .header-center {
+        flex: 1;
+    }
+    .search-trigger-bar {
+        height: 44px; /* Sedikit lebih kecil di HP */
+        padding: 0 10px;
+    }
+    .search-placeholder { font-size: 0.8rem; }
+    .search-shortcut { display: none; }
+
+    /* 3. Time Widget Compact */
+    .header-right {
+        /* Di HP, kita sembunyikan tanggal, sisakan JAM saja agar fokus */
+    }
+    .time-widget {
+        padding: 6px;
+        height: 44px;
+        gap: 0;
+    }
+    .date-section {
+        display: none; /* Sembunyikan tanggal di HP */
+    }
+    .time-section {
+        background: transparent; /* Hilangkan box background di HP */
+        padding: 0 8px;
+    }
+    #realtimeClock {
+        font-size: 0.9rem; /* Ukuran font jam disesuaikan */
+    }
+}
     /* --- TAMBAHAN CSS: UPCOMING FEATURE --- */
 
 /* Gaya untuk kartu yang AKAN tayang (Upcoming) */
@@ -658,4 +720,143 @@ body::before {
 /* Hilangkan outline default browser yang jelek */
 .class-select-input:focus-visible {
     outline: none !important;
+}
+
+/* --- Global Insight Styles (Full Color Update) --- */
+.insight-card {
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: none; /* Hilangkan border default */
+    color: white; /* Default teks putih */
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* --- TAMBAHKAN KODE INI SETELAH .insight-card { ... } --- */
+
+/* 1. Override background & warna teks khusus untuk kartu Istirahat */
+.insight-card.is-break {
+    background-color: #f1f5f9 !important; /* Background abu terang */
+    border: 2px dashed #cbd5e1 !important; /* Border putus-putus */
+    color: #475569 !important; /* Teks jadi abu gelap (Slate) */
+    box-shadow: none !important;
+}
+
+/* 2. Pastikan Judul, Jam, dan Icon di dalamnya ikut berwarna gelap */
+.insight-card.is-break h6,
+.insight-card.is-break .insight-meta,
+.insight-card.is-break .insight-dosen,
+.insight-card.is-break i {
+    color: #475569 !important;
+}
+
+/* 3. Perbaiki warna kotak kelas (misal: 1C, 1D) biar tidak pucat */
+.insight-card.is-break .class-badge {
+    background: #cbd5e1 !important;
+    color: #475569 !important;
+}
+
+.insight-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+/* Badge Kelas (Kotak kiri) */
+.class-badge {
+    background: rgba(0, 0, 0, 0.2); /* Semi transparan hitam agar menyatu */
+    color: white;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1rem;
+    min-width: 65px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.class-badge small {
+    font-size: 0.6rem;
+    opacity: 0.8;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* Typography di dalam kartu */
+.insight-info h6 {
+    margin: 0;
+    font-weight: 800;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: white; 
+    margin-bottom: 4px;
+}
+
+.insight-meta {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    font-weight: 500;
+}
+
+.insight-dosen {
+    font-size: 0.8rem; 
+    margin-top: 6px; 
+    opacity: 0.9;
+    display: block;
+    font-style: italic;
+}
+
+/* State Kosong / Istirahat */
+.insight-card.insight-empty {
+    background: #f1f5f9; /* Abu-abu terang */
+    border: 2px dashed #cbd5e1 !important;
+    color: #64748b; /* Teks abu */
+    box-shadow: none;
+}
+
+.insight-card.insight-empty .class-badge {
+    background: #e2e8f0;
+    color: #94a3b8;
+}
+
+.insight-card.insight-empty h6 {
+    color: #64748b;
+}
+
+.insight-card.insight-empty .insight-meta {
+    color: #94a3b8;
+}
+
+/* Styles untuk Quick Tags (Pencarian) */
+.search-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.search-tag {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    font-weight: 600;
+}
+.search-tag:hover {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
 }
