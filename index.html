@@ -28,44 +28,52 @@
 
     <header class="app-header">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-dark text-white rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-                    <div>
-                                    <div class="d-flex flex-column">
-                <label for="classSelector" class="text-muted fw-bold mb-0 d-flex align-items-center gap-1" 
-                    style="font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer;">
-                    Pilih Kelas <i class="fa-solid fa-pen-to-square" style="font-size: 0.7em;"></i>
-                </label>
-
-                <div class="position-relative d-flex align-items-center">
-                    <select id="classSelector" class="class-select-input form-select border-0 bg-transparent fw-bold m-0 p-0 shadow-none text-dark" 
-                            style="font-size: 1.35rem; cursor: pointer; width: auto; -webkit-appearance: none; appearance: none; background-image: none; padding-right: 1.5rem !important;">
-                        <option value="1A-D4">1A - D4 T.Informatika</option>
-                        <option value="1B-D4">1B - D4 T.Informatika</option>
-                        <option value="1C-D4">1C - D4 T.Informatika</option>
-                        <option value="1D-D4">1D - D4 T.Informatika</option>
-                    </select>
-                    <i class="fa-solid fa-caret-down position-absolute" 
-                    style="right: -5px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: #3b82f6; pointer-events: none;"></i>
-                </div>
-            </div>
-                        <small class="text-muted fw-medium">Jadwal Semester 2</small>
-                    </div>
-                </div>
-                <div class="position-relative" style="max-width: 160px;"> <button id="datePickerBtn" class="date-badge border-0 d-flex align-items-center justify-content-center gap-2 w-100" style="cursor: pointer; transition: 0.2s;">
-                        <i class="fa-regular fa-calendar-days"></i>
-                        <span id="currentDateDisplay" class="text-truncate">Loading...</span>
+            <div class="header-grid">
+                
+                <div class="header-left">
+                    <div class="class-selector-pill">
+                        <div class="icon-box">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
                         
-                        <span class="mx-1 opacity-50" style="border-left: 1px solid rgba(255,255,255,0.3); height: 15px;"></span>
-                        <span id="realtimeClock" style="font-family: monospace; font-size: 1.1em;">00:00:00</span>
-                    </button>
-                    
-                    <input type="date" id="realDateInput" 
-                           style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                        <div class="select-wrapper">
+                            <span class="label-tiny">KELAS</span>
+                            <span id="classNameDisplay" class="class-name-display">1C - D4</span>
+                            
+                            <select id="classSelector" class="class-dropdown-overlay">
+                                <option value="1A-D4">1A - D4</option>
+                                <option value="1B-D4">1B - D4</option>
+                                <option value="1C-D4">1C - D4</option>
+                                <option value="1D-D4">1D - D4</option>
+                            </select>
+                        </div>
+                        
+                        <i class="fa-solid fa-chevron-down caret-icon"></i>
+                    </div>
                 </div>
+
+                <div class="header-center">
+                    <button id="globalViewBtn" class="search-trigger-bar">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <span class="search-placeholder">Cari Dosen, Matkul...</span>
+                        <span class="search-shortcut">⌘K</span>
+                    </button>
+                </div>
+
+                <div class="header-right">
+                    <div class="position-relative"> 
+                        <div id="datePickerBtn" class="time-widget" style="cursor: pointer;">
+                            <div class="date-section">
+                                <span id="currentDateDisplay">Loading...</span>
+                            </div>
+                            <div class="time-section">
+                                <span id="realtimeClock">00:00:00</span>
+                            </div>
+                        </div>
+                        <input type="date" id="realDateInput" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                    </div>
+                </div>
+
             </div>
         </div>
     </header>
@@ -104,6 +112,74 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="Assets/script/data.js"></script>
     <script src="Assets/script/script.js"></script>
+
+    <div class="modal fade" id="globalModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content" style="border-radius: 24px; border: none; background: #f8f9fa;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold ms-2">Pusat Informasi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-pills mb-4 nav-fill p-1 bg-white rounded-pill border" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-pill fw-bold" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-monitor" type="button">
+                            <i class="fa-solid fa-clock me-2"></i>Cek Waktu
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill fw-bold" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-search" type="button">
+                            <i class="fa-solid fa-filter me-2"></i>Cari Data
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-monitor" role="tabpanel">
+                        <div class="bg-white p-3 rounded-4 mb-4 border">
+                            <label class="small text-muted fw-bold text-uppercase mb-2">Pilih Waktu Simulasi</label>
+                            <div class="d-flex gap-2">
+                                <select id="monitorDay" class="form-select fw-bold border-light bg-light">
+                                    <option value="senin">Senin</option>
+                                    <option value="selasa">Selasa</option>
+                                    <option value="rabu">Rabu</option>
+                                    <option value="kamis">Kamis</option>
+                                    <option value="jumat">Jumat</option>
+                                </select>
+                                <input type="time" id="monitorTime" class="form-control fw-bold border-light bg-light" style="max-width: 120px;">
+                                <button id="btnCheckTime" class="btn btn-dark rounded-3 px-3"><i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+                        <div id="monitorResults" class="d-flex flex-column gap-3">
+                            <div class="text-center text-muted py-4">Pilih waktu untuk melihat kegiatan semua kelas.</div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-search" role="tabpanel">
+                        <div class="position-relative mb-4">
+                            <i class="fa-solid fa-magnifying-glass position-absolute text-muted" style="left: 15px; top: 50%; transform: translateY(-50%);"></i>
+                            <input type="text" id="globalSearchInput" class="form-control form-control-lg border-0 bg-white shadow-sm ps-5 rounded-4" placeholder="Cari Dosen, Matkul, atau Ruangan...">
+                        </div>
+
+                                        <div id="suggestionArea" class="mb-4">
+                    <small class="text-muted fw-bold text-uppercase d-block mb-2" style="font-size: 0.7rem;">Cari Cepat Dosen</small>
+                    <div id="dosenTags" class="search-tags-container mb-3">
+                        </div>
+
+                    <small class="text-muted fw-bold text-uppercase d-block mb-2" style="font-size: 0.7rem;">Cari Cepat Ruangan</small>
+                    <div id="ruangTags" class="search-tags-container">
+                        </div>
+                </div>
+                <hr class="border-secondary opacity-10 mb-4">
+
+                        <div id="searchResults" class="d-flex flex-column gap-3">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
