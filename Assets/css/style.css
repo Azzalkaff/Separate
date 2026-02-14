@@ -622,58 +622,114 @@ body::before {
 /* --- Mobile Optimization (Updated for Better UX) --- */
 @media (max-width: 576px) {
     .header-grid {
-        gap: 8px; /* Rapatkan jarak */
+        gap: 8px;
     }
     
-    /* 1. Class Selector Compact */
+    /* 1. Class Selector Compact & Functional */
     .class-selector-pill {
-        padding: 8px;
+        padding: 6px 10px; /* Sedikit lebih ramping */
         min-width: auto;
-        padding-right: 8px; /* Hilangkan space arrow */
+        padding-right: 10px; 
+        position: relative; /* Penting untuk overlay select */
     }
-    .class-selector-pill .icon-box {
-        margin-right: 0; /* Icon only mode jika sempit */
-        width: 36px; height: 36px;
-    }
-    .select-wrapper {
-        display: none; /* Sembunyikan teks nama kelas di HP agar hemat tempat */
-    }
-    .caret-icon { display: none; }
     
-    /* Tetap pastikan select bisa diklik */
+    .class-selector-pill .icon-box {
+        margin-right: 8px; 
+        width: 32px; 
+        height: 32px;
+        font-size: 0.9rem;
+    }
+    
+    /* Ubah strategi: JANGAN hide wrapper, tapi kecilkan font */
+    .select-wrapper {
+        display: flex; /* Tetap tampilkan */
+    }
+    
+    .label-tiny {
+        display: none; /* Sembunyikan label "KELAS" saja */
+    }
+    
+    .class-name-display {
+        font-size: 0.9rem; /* Kecilkan font nama kelas */
+        white-space: nowrap;
+    }
+
+    .caret-icon { 
+        display: none; 
+    }
+    
+    /* Pastikan select menutupi area sentuh */
     .class-dropdown-overlay {
-        width: 100%; height: 100%;
+        width: 100%; 
+        height: 100%;
+        left: 0;
+        top: 0;
     }
 
-    /* 2. Search Bar Compact */
+    /* 2. Search Bar: Icon Only Mode (Untuk hemat tempat) */
     .header-center {
-        flex: 1;
+        flex: 0 0 auto; /* Jangan stretch */
     }
+    
     .search-trigger-bar {
-        height: 44px; /* Sedikit lebih kecil di HP */
-        padding: 0 10px;
-    }
-    .search-placeholder { font-size: 0.8rem; }
-    .search-shortcut { display: none; }
-
-    /* 3. Time Widget Compact */
-    .header-right {
-        /* Di HP, kita sembunyikan tanggal, sisakan JAM saja agar fokus */
-    }
-    .time-widget {
-        padding: 6px;
+        width: 44px;
         height: 44px;
-        gap: 0;
+        padding: 0;
+        justify-content: center;
+        border-radius: 12px;
     }
+    
+    /* Sembunyikan teks placeholder search di mobile */
+    .search-placeholder, .search-shortcut { 
+        display: none; 
+    }
+    
+    .search-icon {
+        margin: 0; /* Center icon */
+    }
+
+    /* 3. Time Widget: Compact Stack (Jam + Tanggal) */
+    .header-right {
+        flex: 1; /* Ambil sisa ruang */
+        justify-content: flex-end;
+    }
+
+    .time-widget {
+        padding: 4px 10px;
+        height: 44px;
+        gap: 8px;
+        width: 100%; /* Full width di sisa ruang */
+        justify-content: space-between; /* Jam kiri, tanggal kanan (atau sebaliknya) */
+        border-radius: 12px;
+    }
+    
+    /* TAMPILKAN TANGGAL KEMBALI TAPI KECIL */
     .date-section {
-        display: none; /* Sembunyikan tanggal di HP */
+        display: flex; /* Show it! */
+        align-items: flex-start;
+        border: none;
+        padding: 0;
+        order: 2; /* Taruh setelah jam (opsional) */
     }
+    
+    #currentDateDisplay {
+        font-size: 0.65rem; /* Sangat kecil tapi terbaca */
+        text-align: right;
+        max-width: 80px;
+        white-space: normal;
+        line-height: 1.1;
+        opacity: 0.8;
+    }
+
     .time-section {
-        background: transparent; /* Hilangkan box background di HP */
-        padding: 0 8px;
+        padding: 4px 6px;
+        background: rgba(0,0,0,0.2);
+        border-radius: 6px;
+        order: 1;
     }
+    
     #realtimeClock {
-        font-size: 0.9rem; /* Ukuran font jam disesuaikan */
+        font-size: 0.95rem; /* Sesuaikan agar muat */
     }
 }
     /* --- TAMBAHAN CSS: UPCOMING FEATURE --- */
