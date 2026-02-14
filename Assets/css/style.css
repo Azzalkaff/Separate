@@ -1,0 +1,661 @@
+/* --- Global Styles & Variables --- */
+        :root {
+            /* Functional Minimalism Palette */
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --bg-body: #f8f9fa;
+            --grid-line: rgba(0, 0, 0, 0.04);
+            
+            --theme-red-bg: #ef4444;      /* Merah Bold */
+    --theme-red-text: #ffffff;    /* Teks Putih */
+    --theme-red-border: #dc2626;  
+
+    /* Hijau (Proyek) */
+    --theme-green-bg:#16a147;  /* Emerald Bold */
+    --theme-green-text: #ffffff;  /* Teks Putih */
+    --theme-green-border: #059669;
+
+    /* Kuning/Orange (Inggris/Indo) */
+    /* Catatan: Kuning sulit terlihat dengan teks putih, gunakan Orange/Amber */
+    --theme-yellow-bg: #f59e0b;   /* Amber Bold */
+    --theme-yellow-text: #ffffff; /* Teks Putih */
+    --theme-yellow-border: #f59e0b;
+  
+  --theme-pink-bg: #f5ce0b;   /* Amber Bold */
+    --theme-pink-text: #ffffff; /* Teks Putih */
+    --theme-pink-border: #f5ce0b;
+  
+
+    /* Biru (Struktur Data) */
+    --theme-blue-bg: #3b82f6;     /* Biru Bold */
+    --theme-blue-text: #ffffff;   /* Teks Putih */
+    --theme-blue-border: #2563eb;
+
+    /* Indigo/Ungu (Pemrograman) */
+    --theme-indigo-bg: #7d63f1;   /* Indigo Bold */
+    --theme-indigo-text: #ffffff; /* Teks Putih */
+    --theme-indigo-border: #4f46e5;
+
+    /* Teal (Agama) */
+    --theme-teal-bg: #f5780b;     /* Teal Bold */
+    --theme-teal-text: #ffffff;   /* Teks Putih */
+    --theme-teal-border: #0d9488;
+
+    /* Abu-abu (Default) */
+    --theme-gray-bg: #64748b;     /* Slate Bold */
+    --theme-gray-text: #ffffff;   /* Teks Putih */
+    --theme-gray-border: #475569;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: #333;
+            /* Graph Paper Background */
+            background-color: var(--bg-body);
+            background-image: 
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        /* --- Header Styling --- */
+        .app-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+    
+    /* Update style date-badge agar terlihat seperti tombol */
+.date-badge {
+    background: #1e293b; /* Warna gelap elegan */
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.date-badge:hover {
+    background: #334155;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Style saat input date aktif (fokus) */
+#realDateInput:focus + #datePickerBtn {
+    ring: 2px solid #cbd5e1;
+}
+
+        /* --- Day Navigation (Scrollable Pill) --- */
+        .day-nav-container {
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px 5px;
+            margin-bottom: 20px;
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .day-nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .day-pill {
+            display: inline-block;
+            padding: 10px 24px;
+            margin-right: 10px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #64748b;
+            background: white;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            user-select: none;
+        }
+
+        .day-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            color: #333;
+        }
+
+        .day-pill.active {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* --- Schedule Cards (Bento Grid) --- */
+        .schedule-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            /* Animation for loading */
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @media (max-width: 576px) {
+            .schedule-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .zen-card {
+            border-radius: 24px;
+            padding: 24px;
+            position: relative;
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            cursor: pointer;
+            border: 1px solid var(--theme-gray-border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            min-height: 180px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .zen-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+            z-index: 10;
+        }
+
+        /* Card Typography */
+        .card-time {
+            font-size: 0.85rem;
+            font-weight: 700;
+            opacity: 0.8;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            float: right;
+        }
+
+        .card-subject {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .card-details {
+            margin-top: auto;
+            padding-top: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.9;
+        }
+
+        /* --- Visual Logic Themes --- */
+        /* Theory (TE) - Solid Pastel */
+        .theme-red { background-color: var(--theme-red-bg); color: var(--theme-red-text); }
+        .theme-green { background-color: var(--theme-green-bg); color: var(--theme-green-text); }
+    .theme-pink { background-color: var(--theme-pink-bg); color: var(--theme-pink-text); }
+        .theme-yellow { background-color: var(--theme-yellow-bg); color: var(--theme-yellow-text); }
+        .theme-blue { background-color: var(--theme-blue-bg); color: var(--theme-blue-text); }
+        .theme-indigo { background-color: var(--theme-indigo-bg); color: var(--theme-indigo-text); }
+        .theme-teal { background-color: var(--theme-teal-bg); color: var(--theme-teal-text); }
+        .theme-slate { background-color: var(--theme-gray-bg); color: var(--theme-gray-text); }
+
+        /* Practice (PR) - Distinct Border/Style */
+        
+    
+.is-practice {
+    /* Membuat gradasi dari transparan ke agak gelap di pojok kanan bawah */
+    background-image: linear-gradient(
+        135deg, 
+        rgba(255, 255, 255, 0.1) 0%, 
+        rgba(0, 0, 0, 0.2) 100%
+    ) !important;
+    
+    /* Menambah shadow agar kartu terasa 'naik' */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+        /* Empty/Break Slot */
+        .zen-card.is-break {
+            background: #fff;
+            border: 2px dashed #cbd5e1;
+            color: #94a3b8;
+            opacity: 0.8;
+            cursor: default;
+        }
+        .zen-card.is-break:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SweetAlert Custom Override */
+        .swal2-popup {
+            border-radius: 24px !important;
+            font-family: var(--font-main) !important;
+            padding: 2em !important;
+        }
+        .swal2-title {
+            font-weight: 800 !important;
+            color: #333 !important;
+        }
+    
+    /* --- FITUR BARU: Live Status --- */
+
+/* Kartu yang SEDANG berlangsung */
+/* --- UPDATE STYLE: LIVE STATUS (GLOWING EFFECT) --- */
+
+/* HAPUS style .zen-card.is-active yang lama, GANTI dengan ini: */
+.zen-card.is-active {
+    /* Jangan ubah background jadi putih, biarkan warna aslinya */
+    /* Tambahkan border putih tebal agar kontras */
+    border: 3px solid rgba(255, 255, 255, 0.9) !important;
+    
+    /* Efek Glow / Bersinar di sekeliling kartu */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 
+                inset 0 0 10px rgba(255, 255, 255, 0.2) !important;
+    
+    /* Sedikit membesar agar terlihat 'pop up' tapi halus */
+    transform: scale(1.03) translateY(-5px);
+    z-index: 99;
+}
+
+/* Pastikan text badge 'LIVE' terlihat jelas */
+.live-badge {
+    display: none;
+    background: #fff; /* Badge jadi putih */
+    color: #ef4444;   /* Teks merah */
+    font-size: 0.75rem;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 50px;
+    margin-left: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    animation: pulse-badge 1.5s infinite;
+}
+
+/* Animasi berdenyut untuk badge */
+@keyframes pulse-badge {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Badge 'SEDANG BERLANGSUNG' */
+.live-badge {
+    display: none; /* Sembunyi dulu */
+    background: #ef4444; /* Merah */
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 4px;
+    animation: pulse-red 2s infinite;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tampilkan badge hanya jika parent-nya aktif */
+.zen-card.is-active .live-badge {
+    display: inline-block;
+}
+
+/* Kartu yang SUDAH lewat (Redupkan) */
+.zen-card.is-past {
+    opacity: 0.5;
+    filter: grayscale(80%);
+    pointer-events: none; /* Supaya tidak bisa diklik */
+    background: #f1f5f9 !important; /* Warna abu muda */
+    border-color: #e2e8f0 !important;
+    color: #94a3b8 !important;
+}
+
+/* Progress Bar Container */
+.progress-track {
+    display: none; /* Default sembunyi */
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 10px;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+/* Bar-nya */
+.progress-fill {
+    height: 100%;
+    background: var(--theme-blue-bg);
+    width: 0%;
+    transition: width 1s linear;
+}
+
+/* Tampilkan progress bar hanya di kartu aktif */
+.zen-card.is-active .progress-track {
+    display: block;
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+    
+    /* Tambahkan ini di paling bawah CSS */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Menggunakan URL data base64 noise transparan */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none; /* Agar tetap bisa diklik */
+    z-index: 9999;
+    opacity: 0.4; /* Sesuaikan intensitas bintik-bintik */
+}
+
+/* --- Dynamic Island Styling --- */
+.dynamic-island {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    /* Default: Sembunyi di bawah layar */
+    transform: translate(-50%, 150%);
+    width: 90%;
+    max-width: 400px;
+    background: rgba(15, 23, 42, 0.95); /* Warna Dark Slate */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 50px;
+    padding: 12px 20px;
+    color: white;
+    z-index: 9999;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Class ini akan ditambahkan via JS untuk memunculkan bar */
+.dynamic-island.visible {
+    transform: translate(-50%, 0);
+}
+
+.island-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.island-icon {
+    width: 40px;
+    height: 40px;
+    background: #ef4444; /* Merah Live */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: white;
+    /* Animasi denyut */
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    animation: pulse-red-island 2s infinite;
+    flex-shrink: 0;
+}
+
+.island-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Supaya teks panjang tidak tumpah */
+}
+
+.island-label {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.island-subject {
+    font-size: 0.95rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.island-meta {
+    background: rgba(255,255,255,0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+@keyframes pulse-red-island {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* --- MOBILE OPTIMIZATION (Salin bagian ini ke paling bawah style) --- */
+        @media (max-width: 576px) {
+            /* 1. Header Lebih Ringkas */
+            .app-header {
+                padding: 12px 0;
+            }
+            .app-header h5 {
+                font-size: 1rem; /* Perkecil ukuran nama kelas */
+            }
+            .app-header small {
+                display: none; /* Sembunyikan subtitle "Jadwal Semester 2" agar tidak penuh */
+            }
+            
+            /* 2. Tombol Tanggal & Jam Compact */
+            .date-badge {
+                padding: 6px 12px;
+                font-size: 0.75rem; /* Font lebih kecil */
+            }
+            /* Sembunyikan jam detik di HP, cukup tanggal saja agar muat */
+            #realtimeClock {
+                display: none; 
+            }
+            /* Hilangkan garis pemisah jam jika jam disembunyikan */
+            .date-badge span.opacity-50 {
+                display: none;
+            }
+
+            /* 3. Container & Grid */
+            .container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .schedule-grid {
+                gap: 15px; /* Kurangi jarak antar kartu */
+            }
+
+            /* 4. Kartu Jadwal (Zen Card) Lebih Padat */
+            .zen-card {
+                padding: 16px; /* Padding dalam kartu dikurangi dari 24px ke 16px */
+                min-height: auto; /* Hilangkan tinggi minimum agar tidak terlalu panjang */
+                border-radius: 20px;
+            }
+            .card-subject {
+                font-size: 1.1rem; /* Judul Matkul tidak terlalu besar */
+                margin-top: 10px;
+            }
+            .card-details {
+                font-size: 0.8rem;
+                padding-top: 10px;
+            }
+            .card-tag {
+                font-size: 0.65rem;
+                padding: 3px 8px;
+            }
+
+            /* 5. Navigasi Hari (Pill) */
+            .day-pill {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+            }
+            
+            /* 6. Dynamic Island (Status Bar Bawah) */
+            .dynamic-island {
+                width: 92%; /* Lebih lebar dikit di HP */
+                bottom: 20px;
+                padding: 10px 15px;
+            }
+            .island-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+            .island-subject {
+                max-width: 150px; /* Batasi panjang teks agar tidak merusak layout */
+            }
+        }
+        
+        /* --- MOBILE OPTIMIZATION (VERSI FIX: JAM TAMPIL) --- */
+        @media (max-width: 576px) {
+            /* 1. Header Lebih Ringkas */
+            .app-header {
+                padding: 10px 0;
+            }
+            /* Perkecil teks kiri (Nama Kelas) agar tidak nabrak kanan */
+            .app-header h5 {
+                font-size: 0.9rem; 
+                white-space: nowrap;
+            }
+            .app-header small {
+                display: none; /* Sembunyikan subtitle "Jadwal Semester 2" */
+            }
+            
+            /* 2. Tombol Tanggal & Jam (Tumpuk Vertikal) */
+            .date-badge {
+                /* Ubah arah jadi kolom (atas-bawah) */
+                flex-direction: column !important; 
+                align-items: flex-end !important; /* Rata kanan */
+                padding: 5px 12px !important;
+                gap: 0 !important; /* Hilangkan jarak antar elemen */
+                background: #1e293b !important;
+                min-width: 100px; /* Lebar minimum agar stabil */
+            }
+
+            /* Tanggal (Atas) - Font Kecil */
+            #currentDateDisplay {
+                font-size: 0.65rem !important;
+                opacity: 0.8;
+                line-height: 1.2;
+            }
+
+            /* Jam (Bawah) - Font Lebih Besar & Tampil */
+            #realtimeClock {
+                display: block !important; /* PASTIKAN INI MUNCUL */
+                font-size: 0.85rem !important;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+
+            /* Sembunyikan garis pemisah dan icon kalender agar hemat tempat */
+            .date-badge .opacity-50, 
+            .date-badge .fa-calendar-days {
+                display: none !important;
+            }
+
+            /* 3. Container & Grid */
+            .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            .schedule-grid {
+                gap: 15px;
+            }
+
+            /* 4. Kartu Jadwal */
+            .zen-card {
+                padding: 15px;
+                border-radius: 16px;
+            }
+            .card-subject {
+                font-size: 1.1rem;
+            }
+            
+            /* 5. Dynamic Island (Bawah) */
+            .dynamic-island {
+                width: 92%;
+                bottom: 20px;
+                padding: 8px 15px;
+            }
+        }
+    
+    /* --- TAMBAHAN CSS: UPCOMING FEATURE --- */
+
+/* Gaya untuk kartu yang AKAN tayang (Upcoming) */
+.zen-card.is-upcoming {
+    border: 2px solid rgba(245, 158, 11, 0.5) !important; /* Border Orange */
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2) !important; /* Glow halus */
+}
+
+/* Ubah warna icon & teks saat mode Upcoming */
+.dynamic-island.upcoming-mode .island-icon {
+    background: #f59e0b !important; /* Warna Amber/Orange */
+    animation: pulse-yellow-island 2s infinite;
+    box-shadow: none !important;
+}
+
+.dynamic-island.upcoming-mode .island-label {
+    color: #f59e0b !important; /* Teks label jadi orange */
+}
+
+/* Animasi denyut warna kuning */
+@keyframes pulse-yellow-island {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+/* --- Class Selector Styling --- */
+/* Style khusus untuk dropdown kelas agar terlihat bisa diklik */
+.class-select-input {
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent !important; /* Garis bawah transparan default */
+    border-radius: 0 !important;
+}
+
+/* Saat di-hover atau di-klik (focus) */
+.class-select-input:hover, 
+.class-select-input:focus {
+    color: #3b82f6 !important; /* Ubah warna teks jadi biru tema */
+    border-bottom-color: rgba(59, 130, 246, 0.3) !important; /* Munculkan garis bawah samar */
+}
+
+/* Hilangkan outline default browser yang jelek */
+.class-select-input:focus-visible {
+    outline: none !important;
+}
