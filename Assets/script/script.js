@@ -187,8 +187,8 @@ function renderWeekendView(dayName) {
             <div class="mb-3 p-4 rounded-circle bg-light d-inline-block">
                 <i class="fa-solid fa-mug-hot fa-3x text-warning"></i>
             </div>
-            <h3 class="fw-bold text-dark">Happy Weekend!</h3>
-            <p class="text-secondary">Tidak ada jadwal kuliah. Waktunya istirahat atau nugas santai.</p>
+            <h3 class="fw-bold text-dark">libur cik</h3>
+            <p class="text-secondary">Nggak ada matkul. Saatnya rebahan sambil scroll sosmed.</p>
         </div>
     `;
 }

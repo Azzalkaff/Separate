@@ -8,7 +8,6 @@ const scheduleData = {
             { "jam": "13:00 – 15:30", "mata_kuliah": "Matematika Terapan B TE", "dosen": "Siti Dwi Setiarini", "ruang": "D112-Kelas" }
         ],
         "selasa": [
-            { "jam": "07:00 – 07:50", "mata_kuliah": "Kosong 50 Menit", "dosen": "-", "ruang": "-" },
             { "jam": "07:50 – 09:30", "mata_kuliah": "Teknik Pemrograman TE", "dosen": "Zulkifli Arsyad", "ruang": "D101-Kelas" },
             { "jam": "09:30 – 09:50", "mata_kuliah": "Istirahat 20 Menit", "dosen": "-", "ruang": "-" },
             { "jam": "09:50 – 10:40", "mata_kuliah": "Kosong 50 Menit", "dosen": "-", "ruang": "-" },
@@ -27,10 +26,7 @@ const scheduleData = {
             { "jam": "15:50 – 16:40", "mata_kuliah": "Teknik Pemrograman PR", "dosen": "Muhammad Riza A", "ruang": "D106-Lab. SDB" }
         ],
         "kamis": [
-            { "jam": "07:00 – 09:30", "mata_kuliah": "Kosong", "dosen": "-", "ruang": "-" },
-            { "jam": "09:30 – 09:50", "mata_kuliah": "Istirahat 20 Menit", "dosen": "-", "ruang": "-" },
             { "jam": "09:50 – 12:20", "mata_kuliah": "Bahasa Inggris 2 PR", "dosen": "Muhammad Yazidus S", "ruang": "D217-Kelas" },
-            { "jam": "12:20 – 13:00", "mata_kuliah": "Istirahat 40 Menit", "dosen": "-", "ruang": "-" }
         ],
         "jumat": [
             { "jam": "07:00 – 08:40", "mata_kuliah": "Struktur Data dan Algoritma TE", "dosen": "Ani Rahmani", "ruang": "D224-Kelas" }
